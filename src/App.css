@@ -15,7 +15,7 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: calc(100vh - 160px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,4 +35,19 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+button {
+  padding: 10px;
+  font-size: 24px
+}
+
+.dices {
+  display: flex;
+  gap: 30px;
+  padding: 40px 80px;
+}
+
+.dice + .dice {
+  margin-top: 7px
 }

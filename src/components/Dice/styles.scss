@@ -1,0 +1,302 @@
+$z-rotator-duration: calc(1.5s * var(--animation-ratio)) ;
+$z-rotator-delay: calc(2s * (var(--animation-ration) - 1));
+$rotator-duration: 1.2s;
+$cube-duration: 0.6s;
+
+/* $rotator-duration: 13s;
+$cube-duration: 6s; */
+
+/* $font-size: 16px;
+$perspective: 600px;
+$dot-size: 3.3em;
+$border-width: 5px;
+$side-inner-border-radius: 24px;
+$side-outer-border-radius: 30px;
+$cube-halfsize: 10em;
+$cube-inner-halfsize: 9.9em; */
+
+$font-size: 3px;
+$perspective: 180px;
+$dot-size: 3.3em;
+$border-width: 2px;
+$side-inner-border-radius: 5px;
+$side-outer-border-radius: 8px;
+$cube-halfsize: 10em;
+$cube-inner-halfsize: 9.6em;
+
+/* $side-bg-color: rgb(254, 254, 254);
+$edge-color: rgb(89, 86, 157);
+$dot-color: rgb(242, 82, 146);
+$dot-shadow-color: rgba(0, 0, 0, 0.5); */
+
+$side-bg-color: #fff;
+$edge-color: #aab;
+$dot-color: #555;
+$dot-shadow-color: #000;
+
+.dice {
+  display: flex;
+  position: relative;
+  flex-flow: wrap;
+  width: 25em;
+  max-width: 25em;
+  min-width: 0px;
+  min-height: 0px;
+  height: 25em;
+  justify-content: center;
+  font-size: $font-size;
+  transform-style: preserve-3d;
+  transition: transform ease-out $z-rotator-duration;
+  transition-delay: $z-rotator-delay;
+  transform: translateX(calc(200em * var(--animation-ratio)));
+
+  &.rotated {
+    transform: translateX(0);
+  }
+
+  div, span, ol, li {
+    font-size: inherit;
+  }
+
+  ol,
+  li {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  .perspective {
+    place-items: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8em, 1fr));
+    grid-template-rows: auto;
+    padding: 2em;
+    perspective: $perspective;
+    height: 25em;
+    width: 25em;
+    z-index: 1;
+  }
+
+  .rotator {
+    height: 20em;
+    width: 20em;
+    transform-style: preserve-3d;
+    transition: transform $rotator-duration;
+  }
+
+  .z-rotator {
+    height: 20em;
+    width: 20em;
+    transform-style: preserve-3d;
+    transition: transform ease-out $z-rotator-duration;
+  }
+
+  &.rotated .z-rotator {
+    transform: rotateZ(-720deg);
+  }
+
+  &.rotated .rotator {
+    transform: rotateX(540deg) rotateY(-540deg) rotateZ(360deg);
+  }
+
+  .cube {
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    height: 100%;
+    border: 0 none;
+    list-style-type: none;
+    transform-style: preserve-3d;
+    width: 100%;
+    transition: transform $cube-duration;
+  }
+
+  &[data-value="1"] .cube {
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  }
+
+  &[data-value="2"] .cube {
+    transform: rotateX(90deg) rotateY(0deg) rotateZ(0deg);
+  }
+
+  &[data-value="3"] .cube {
+    transform: rotateX(0deg) rotateY(-90deg) rotateZ(0deg);
+  }
+
+  &[data-value="4"] .cube {
+    transform: rotateX(0deg) rotateY(90deg) rotateZ(0deg);
+  }
+
+  &[data-value="5"] .cube {
+    transform: rotateX(-90deg) rotateY(0deg) rotateZ(0deg);
+  }
+
+  &[data-value="6"] .cube {
+    transform: rotateX(0deg) rotateY(180deg) rotateZ(0deg);
+  }
+
+  .side {
+    background-color: $edge-color;
+    border: $border-width solid $edge-color;
+    grid-area: 1 / 1;
+    border-radius: $side-inner-border-radius;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+
+    &-1 {
+      transform: rotate3d(0, 0, 0, 90deg) translateZ($cube-inner-halfsize);
+    }
+
+    &-2 {
+      transform: rotate3d(-1, 0, 0, 90.01deg) translateZ($cube-inner-halfsize);
+    }
+
+    &-3 {
+      transform: rotate3d(0, 1, 0, 90deg) translateZ($cube-inner-halfsize);
+    }
+
+    &-4 {
+      transform: rotate3d(0, -1, 0, 90deg) translateZ($cube-inner-halfsize);
+    }
+
+    &-5 {
+      transform: rotate3d(1, 0, 0, 90.01deg) translateZ($cube-inner-halfsize);
+    }
+
+    &-6 {
+      transform: rotate3d(0, 1, 0, 180deg) translateZ($cube-inner-halfsize);
+    }
+  }
+
+  .cross-section {
+    background-color: transparent;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+
+    &-z {
+      transform: rotateX(180deg);
+    }
+
+    &-y {
+      transform: rotateY(90deg);
+    }
+
+    &-x {
+      transform: rotateX(90deg);
+    }
+  }
+
+  .dot-group {
+    background-color: $side-bg-color;
+    display: grid;
+    grid-template-areas:
+      "one two three"
+      "four five six"
+      "seven eight nine";
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    height: 100%;
+    width: 100%;
+    border-width: $border-width;
+    border-style: solid;
+    border-color: $edge-color;
+    border-image: initial;
+    grid-column: 1;
+    grid-row: 1;
+    border-radius: $side-outer-border-radius;
+    padding: 1em;
+
+    &-1 {
+      transform: rotate3d(0, 0, 0, 90deg) translateZ($cube-halfsize);
+    }
+
+    &-2 {
+      transform: rotate3d(-1, 0, 0, 90.01deg) translateZ($cube-halfsize);
+    }
+
+    &-3 {
+      transform: rotate3d(0, 1, 0, 90deg) translateZ($cube-halfsize);
+    }
+
+    &-4 {
+      transform: rotate3d(0, -1, 0, 90deg) translateZ($cube-halfsize);
+    }
+
+    &-5 {
+      transform: rotate3d(1, 0, 0, 90.01deg) translateZ($cube-halfsize);
+    }
+
+    &-6 {
+      transform: rotate3d(0, 1, 0, 180deg) translateZ($cube-halfsize);
+    }
+  }
+
+  .dot {
+    place-self: center;
+    background-color: $dot-color;
+    border-radius: 50%;
+    box-shadow: $dot-shadow-color -0.25em 0.25em 0.35em inset;
+    display: block;
+    height: $dot-size;
+    width: $dot-size;
+
+    &-1 {
+      grid-area: one;
+    }
+
+    &-3 {
+      grid-area: three;
+    }
+
+    &-4 {
+      grid-area: four;
+    }
+
+    &-5 {
+      grid-area: five;
+    }
+
+    &-6 {
+      grid-area: six;
+    }
+
+    &-7 {
+      grid-area: seven;
+    }
+
+    &-9 {
+      grid-area: nine;
+    }
+  }
+
+  .shadow {
+    opacity: 0.15;
+    position: absolute;
+    top: 10%;
+    width: 1000%;
+    height: 1000%;
+    transform: translate3D(3em, 10em, -650em) rotateX(90deg);
+    transform-style: preserve-3d;
+
+    &:before {
+      display: block;
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: $side-outer-border-radius * 3;
+      background-color: rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 100em 30em #000;
+      transition: transform ease-out $z-rotator-duration;
+      transition-delay: $z-rotator-delay;
+      filter: blur(3rem);
+    }
+  }
+
+  &.rotated .shadow:before {
+    transform: rotateZ(-720deg);
+  }
+}

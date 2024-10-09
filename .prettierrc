@@ -1,0 +1,10 @@
+{
+  "bracketSpacing": true,
+  "jsxBracketSameLine": true,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "importOrder": ["^src/(.*)$", "^[./]", "^(.*?)(\\.scss|\\.css)$"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "endOfLine": "lf"
+}

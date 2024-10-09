@@ -1,0 +1,86 @@
+{
+  "extends": [
+    "airbnb",
+    "airbnb/hooks",
+    "airbnb-typescript",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": [
+    "react",
+    "import",
+    "prettier"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "prettier/prettier": "error",
+    "import/prefer-default-export": "off",
+    "import/extensions": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/require-default-props": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/prop-types": "off",
+    "react/jsx-pascal-case": "off",
+    "react-hooks/exhaustive-deps": "warn",
+    "jsx-a11y/control-has-associated-label": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-shadow": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/ban-ts-comment": [
+      "warn",
+      {
+        "ts-ignore": "allow-with-description"
+      }
+    ],
+    "no-console": [
+      1,
+      {
+        "allow": [
+          "warn",
+          "error"
+        ]
+      }
+    ],
+    "import/no-extraneous-dependencies": "off", // TODO need to investigate
+    "no-restricted-imports":[
+      "warn",
+      {
+        "patterns":[
+          {
+            "group":[
+              "../../../../"
+            ],
+            "message":"Use absolute import"
+          }
+        ],
+        "paths": [
+          {"name":"lodash"}
+        ]
+      }
+    ],
+    "no-implicit-coercion": [2, { "string": true, "boolean": true, "number": true }],
+    "no-extra-boolean-cast": [2, { "enforceForLogicalOperands": true }],
+    "curly": ["error", "all"],
+    "spaced-comment": "warn",
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": ["variable", "variableLike"],
+        "format": ["camelCase", "PascalCase", "UPPER_CASE"],
+        "custom": {
+          "regex": "^i|.{2,}$",
+          "match": true
+        }
+      },
+      {
+        "selector": ["variable", "variableLike"],
+        "modifiers": ["destructured"],
+        "format": null
+      }
+    ],
+    // TODO following rules were temporarily off, need to refactor
+    "import/no-cycle": "off",
+    "react/no-unstable-nested-components": "off"
+  }
+}

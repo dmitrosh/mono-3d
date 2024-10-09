@@ -3,6 +3,7 @@ import React, {
   forwardRef,
   useCallback,
   useImperativeHandle,
+  useMemo,
   useState,
 } from 'react';
 
@@ -27,6 +28,10 @@ export const Dice = forwardRef<GetValueHandle, DiceProps>(
       setRotated(!rotated);
     }, [rotated]);
 
+    const delay = useMemo(() => {
+      return 1500 * ratio + Math.max(2000 * (ratio - 1), 0);
+    }, [ratio]);
+
     useImperativeHandle(
       ref,
       () => ({
@@ -36,12 +41,12 @@ export const Dice = forwardRef<GetValueHandle, DiceProps>(
           setValue(value);
           toggleRotated();
 
-          await sleep(2000);
+          await sleep(delay);
 
           return value;
         },
       }),
-      [toggleRotated],
+      [toggleRotated, delay],
     );
 
     return (

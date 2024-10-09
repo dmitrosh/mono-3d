@@ -5,12 +5,11 @@
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+  opacity: 0.5;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.App-logo.animated {
+  animation: App-logo-congrats 2s linear;
 }
 
 .App-header {
@@ -28,12 +27,21 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
+@keyframes App-logo-congrats {
   from {
-    transform: rotate(0deg);
+    opacity: 0.5;
+    transform: rotate(0deg) scale(1);
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: rotate(270deg) scale(1.8);
+    filter: hue-rotate(135deg);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 0.5;
+    transform: rotate(540deg) scale(1);
+    filter: hue-rotate(0deg);
   }
 }
 

@@ -1,18 +1,20 @@
 import React, { useRef, useState } from 'react';
 
 import { Dice, GetValueHandle } from 'src/components/Dice';
+import sleep from 'src/tools/sleep';
 
 import './App.css';
-import logo from './logo.svg';
+import logoSrc from './logo.svg';
 
 function App() {
   const [progress, setProgress] = useState(false);
   const dice1 = useRef<GetValueHandle>(null);
   const dice2 = useRef<GetValueHandle>(null);
+  const logo = useRef<HTMLImageElement>(null);
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src={logoSrc} className="App-logo" ref={logo} alt="logo" />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
@@ -28,6 +30,7 @@ function App() {
           type="button"
           onClick={async () => {
             setProgress(true);
+            logo?.current?.classList.remove('animated');
 
             const [value1, value2] = await Promise.all([
               dice1.current?.getValue(),
@@ -35,7 +38,8 @@ function App() {
             ]);
 
             if (value1 === value2) {
-              alert('Double!');
+              logo?.current?.classList.add('animated');
+              await sleep(1000);
             }
 
             setProgress(false);

@@ -5,4 +5,6 @@ export const root: SxProps<Theme> = {
   alignItems: 'center',
   justifyContent: 'center',
   minHeight: '100vh',
+  p: 4,
+  overflow: 'auto',
 };

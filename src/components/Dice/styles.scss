@@ -48,7 +48,7 @@ $dot-shadow-color: #000;
   transform-style: preserve-3d;
   transition: transform ease-out $z-rotator-duration;
   transition-delay: $z-rotator-delay;
-  transform: translateX(calc(200em * var(--animation-ratio)));
+  transform: translateX(calc(450px * var(--animation-ratio)));
 
   &.rotated {
     transform: translateX(0);

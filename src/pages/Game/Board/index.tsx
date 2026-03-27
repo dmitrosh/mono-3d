@@ -5,6 +5,7 @@ import DicePair from 'src/components/DicePair';
 import PlayerIcon from 'src/components/PlayerIcon';
 
 import * as styles from './styles';
+import { useGameState } from './useGameState';
 
 const SQUARE_COLORS = [...Array(36).keys()].map(
   (i) => `hsl(${Math.round((i * 360) / 36)}, 65%, 45%)`,
@@ -36,7 +37,8 @@ function generatePath(): { row: number; col: number }[] {
 const PATH = generatePath();
 
 function Board() {
-  const playerPositions = [0, 0];
+  const { playerPositions, playerMoney, currentPlayer, handleRoll } =
+    useGameState();
 
   return (
     <Box sx={styles.board}>
@@ -56,20 +58,41 @@ function Board() {
             )}
             {playersHere.length > 0 && (
               <Box sx={styles.players}>
-                {playersHere.map((player) => (
-                  <PlayerIcon
-                    key={player.id}
-                    size={22}
-                    style={{ color: player.color }}
-                  />
-                ))}
+                {playersHere.map((player) => {
+                  const playerIndex = PLAYERS.indexOf(player);
+                  const isActive = playerIndex === currentPlayer;
+
+                  return (
+                    <Box
+                      key={player.id}
+                      sx={styles.playerToken(isActive, player.color)}>
+                      <PlayerIcon size={22} style={{ color: player.color }} />
+                    </Box>
+                  );
+                })}
               </Box>
             )}
           </Box>
         );
       })}
       <Box sx={styles.center}>
-        <DicePair />
+        <Typography variant="subtitle1" sx={styles.turnLabel}>
+          Player {currentPlayer + 1}&apos;s turn
+        </Typography>
+        <Box sx={styles.moneyPanel}>
+          {PLAYERS.map((player, i) => (
+            <Box key={player.id} sx={styles.moneyBadge(player.color)}>
+              <PlayerIcon size={16} style={{ color: player.color }} />
+              <Typography sx={styles.moneyText(player.color)}>
+                ${playerMoney[i]}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+        <DicePair
+          label={`Player ${currentPlayer + 1} Move`}
+          onRoll={handleRoll}
+        />
       </Box>
     </Box>
   );

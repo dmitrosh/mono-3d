@@ -22,9 +22,18 @@ export const square = (
   boxSizing: 'border-box',
   borderRadius: 1,
   display: 'flex',
+  flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
+  gap: 0.5,
 });
+
+export const players: SxProps<Theme> = {
+  display: 'flex',
+  flexDirection: 'row',
+  gap: 0.5,
+  justifyContent: 'center',
+};
 
 export const startLabel: SxProps<Theme> = {
   color: '#fff',

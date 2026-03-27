@@ -1,7 +1,3 @@
-.App {
-  text-align: center;
-}
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -10,21 +6,6 @@
 
 .App-logo.animated {
   animation: App-logo-congrats 2s linear;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: calc(100vh - 160px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
 }
 
 @keyframes App-logo-congrats {
@@ -43,19 +24,4 @@
     transform: rotate(540deg) scale(1);
     filter: hue-rotate(0deg);
   }
-}
-
-button {
-  padding: 10px;
-  font-size: 24px
-}
-
-.dices {
-  display: flex;
-  gap: 30px;
-  padding: 40px 80px;
-}
-
-.dice + .dice {
-  margin-top: 7px
 }

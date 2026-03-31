@@ -6,11 +6,12 @@ import { Dice, GetValueHandle } from 'src/components/Dice';
 import * as styles from './styles';
 
 interface DicePairProps {
+  disabled?: boolean;
   label?: string;
   onRoll?: (values: [number, number]) => void;
 }
 
-function DicePair({ label = 'Move', onRoll }: DicePairProps) {
+function DicePair({ disabled = false, label = 'Move', onRoll }: DicePairProps) {
   const [progress, setProgress] = useState(false);
   const dice1 = useRef<GetValueHandle>(null);
   const dice2 = useRef<GetValueHandle>(null);
@@ -37,7 +38,7 @@ function DicePair({ label = 'Move', onRoll }: DicePairProps) {
         variant="contained"
         size="large"
         sx={styles.moveButton}
-        disabled={progress}
+        disabled={progress || disabled}
         onClick={handleMove}>
         {label}
       </Button>

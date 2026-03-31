@@ -4,12 +4,10 @@ import React from 'react';
 import DicePair from 'src/components/DicePair';
 import PlayerIcon from 'src/components/PlayerIcon';
 
+import ActionDialog from './ActionDialog';
+import { SQUARES } from './squares';
 import * as styles from './styles';
 import { useGameState } from './useGameState';
-
-const SQUARE_COLORS = [...Array(36).keys()].map(
-  (i) => `hsl(${Math.round((i * 360) / 36)}, 65%, 45%)`,
-);
 
 const PLAYERS = [
   { id: 1, color: '#000000' },
@@ -17,84 +15,110 @@ const PLAYERS = [
 ];
 
 function generatePath(): { row: number; col: number }[] {
-  const topRow = [...Array(10).keys()].map((col) => ({ row: 0, col }));
-  const rightCol = [...Array(9).keys()].map((i) => ({
-    row: i + 1,
-    col: 9,
+  // 11x11 grid — 40 squares clockwise from Go (bottom-right corner)
+  const bottomRow = [...Array(11).keys()].map((i) => ({
+    row: 10,
+    col: 10 - i,
   }));
-  const bottomRow = [...Array(9).keys()].map((i) => ({
-    row: 9,
-    col: 8 - i,
-  }));
-  const leftCol = [...Array(8).keys()].map((i) => ({
-    row: 8 - i,
-    col: 0,
-  }));
+  const leftCol = [...Array(9).keys()].map((i) => ({ row: 9 - i, col: 0 }));
+  const topRow = [...Array(11).keys()].map((i) => ({ row: 0, col: i }));
+  const rightCol = [...Array(9).keys()].map((i) => ({ row: i + 1, col: 10 }));
 
-  return [...topRow, ...rightCol, ...bottomRow, ...leftCol];
+  return [...bottomRow, ...leftCol, ...topRow, ...rightCol];
 }
 
 const PATH = generatePath();
 
 function Board() {
-  const { playerPositions, playerMoney, currentPlayer, handleRoll } =
-    useGameState();
+  const {
+    playerPositions,
+    playerMoney,
+    currentPlayer,
+    propertyOwners,
+    pendingAction,
+    handleRoll,
+    handleResolve,
+  } = useGameState();
 
   return (
-    <Box sx={styles.board}>
-      {PATH.map(({ row, col }, index) => {
-        const playersHere = PLAYERS.filter(
-          (player, i) => playerPositions[i] === index,
-        );
+    <>
+      <Box sx={styles.board}>
+        {PATH.map(({ row, col }, index) => {
+          const square = SQUARES[index];
+          const ownerIndex = propertyOwners[index];
+          const playersHere = PLAYERS.filter(
+            (player, i) => playerPositions[i] === index,
+          );
 
-        return (
-          <Box
-            key={`${row}-${col}`}
-            sx={styles.square(SQUARE_COLORS[index], row, col)}>
-            {index === 0 && (
-              <Typography variant="caption" sx={styles.startLabel}>
-                Start
+          return (
+            <Box
+              key={`${row}-${col}`}
+              sx={styles.square(
+                square.type,
+                square.groupColor,
+                row,
+                col,
+                index,
+              )}>
+              <Typography variant="caption" sx={styles.squareName}>
+                {square.name}
               </Typography>
-            )}
-            {playersHere.length > 0 && (
-              <Box sx={styles.players}>
-                {playersHere.map((player) => {
-                  const playerIndex = PLAYERS.indexOf(player);
-                  const isActive = playerIndex === currentPlayer;
+              {(square.price !== undefined || square.tax !== undefined) && (
+                <Typography sx={styles.squarePrice}>
+                  {square.price ?? square.tax}₴
+                </Typography>
+              )}
+              {ownerIndex !== undefined && (
+                <Box sx={styles.ownerDot(PLAYERS[ownerIndex].color)} />
+              )}
+              {playersHere.length > 0 && (
+                <Box sx={styles.players}>
+                  {playersHere.map((player) => {
+                    const playerIndex = PLAYERS.indexOf(player);
+                    const isActive = playerIndex === currentPlayer;
 
-                  return (
-                    <Box
-                      key={player.id}
-                      sx={styles.playerToken(isActive, player.color)}>
-                      <PlayerIcon size={22} style={{ color: player.color }} />
-                    </Box>
-                  );
-                })}
-              </Box>
-            )}
-          </Box>
-        );
-      })}
-      <Box sx={styles.center}>
-        <Typography variant="subtitle1" sx={styles.turnLabel}>
-          Player {currentPlayer + 1}&apos;s turn
-        </Typography>
-        <Box sx={styles.moneyPanel}>
-          {PLAYERS.map((player, i) => (
-            <Box key={player.id} sx={styles.moneyBadge(player.color)}>
-              <PlayerIcon size={16} style={{ color: player.color }} />
-              <Typography sx={styles.moneyText(player.color)}>
-                ${playerMoney[i]}
-              </Typography>
+                    return (
+                      <Box
+                        key={player.id}
+                        sx={styles.playerToken(isActive, player.color)}>
+                        <PlayerIcon size={20} style={{ color: player.color }} />
+                      </Box>
+                    );
+                  })}
+                </Box>
+              )}
             </Box>
-          ))}
+          );
+        })}
+
+        <Box sx={styles.center}>
+          <Typography variant="subtitle1" sx={styles.turnLabel}>
+            Хід Гравця {currentPlayer + 1}
+          </Typography>
+          <Box sx={styles.moneyPanel}>
+            {PLAYERS.map((player, i) => (
+              <Box key={player.id} sx={styles.moneyBadge(player.color)}>
+                <PlayerIcon size={16} style={{ color: player.color }} />
+                <Typography sx={styles.moneyText(player.color)}>
+                  {playerMoney[i]}₴
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+          <DicePair
+            label={`Хід Гравця ${currentPlayer + 1}`}
+            disabled={pendingAction !== null}
+            onRoll={handleRoll}
+          />
         </Box>
-        <DicePair
-          label={`Player ${currentPlayer + 1} Move`}
-          onRoll={handleRoll}
-        />
       </Box>
-    </Box>
+
+      <ActionDialog
+        action={pendingAction}
+        playerMoney={playerMoney[currentPlayer]}
+        onResolve={handleResolve}
+      />
+    </>
   );
 }
 
